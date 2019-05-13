@@ -50,3 +50,17 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Movidas del PIC C Compiler
+*.ccspjt
+*.cof
+*.err
+*.esym
+*.lst
+*.STA
+*.sym
+*.tre
+*.xsym
+
+# Movidas de macOS
+.DS_Store
