@@ -1,7 +1,6 @@
-#include "tarjeta.h"
+#include "../include/tarjeta.h"
 #use delay (clock=48MHz)
-#include "srf02.h"
-#include "lcd03.h"
+#include "../include/srf02.h"
 
 const long int N0 = 0;
 
