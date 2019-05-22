@@ -5,17 +5,33 @@
 
 const long int N0 = 0;
 
+// Variables para el control de la velocidad mediante PWM.
+// Durante el movimiento a izquierda y derecha se tiene en
+// cuenta la variable giro para determinar la diferencia entre
+// velocidad de unas ruedas y otras.
 int vel = 240;
-int aux = 0;
+int giro = 30;
+int pwm_cnt = 0;
+
 long int delay = 50;
 long int delay2 = 600;
 
 #define ADELANTE 0
 #define ATRAS 1
-#define DERECHA 2
-#define IZQUIERDA 3
-#define PARAR 4
+#define ROTAR_DERECHA 2
+#define ROTAR_IZQUIERDA 3
+#define DERECHA 4
+#define IZQUIERDA 5
+#define PARAR 6
 
+/*****************************************************************************/
+/*                             Estados del robot                             */
+/*****************************************************************************/
+#define EST_EXPLORACION 0
+#define EST_ATAQUE 1
+#define EST_EJEMPLO 2
+
+int estado_actual = EST_EXPLORACION;
 int movimiento = ADELANTE, movimiento_anterior = ADELANTE;
 
 void adelante_() {
@@ -53,6 +69,20 @@ void mover_d_eje() {
    M4_A();
 }
 
+void mover_i() {
+  M1_P();
+  M2_P();
+  M3_H();
+  M4_H();
+}
+
+void mover_d() {
+   M1_H();
+   M2_H();
+   M3_P();
+   M4_P();
+}
+
 #INT_TIMER0
 void int_tmr0()
 {
@@ -69,12 +99,24 @@ void int_tmr0()
       case ATRAS:
          atras_();
          break;
-      case DERECHA:
+      case ROTAR_DERECHA:
          mover_d_eje();
          break;
-      case IZQUIERDA:
+      case ROTAR_IZQUIERDA:
          mover_i_eje();
          break;
+      case DERECHA:
+	if (aux <= (vel - giro))
+	  adelante_();
+	else
+	  mover_d();
+	break;
+      case IZQUIERDA:
+	if (aux <= (vel - giro))
+	  adelante_();
+	else
+	  mover_i();
+	break;
       case PARAR:
          parar_();
          break;
@@ -103,31 +145,16 @@ void main() {
    while (1)
    {
 
-      movimiento = ADELANTE;
-      delay_ms(delay2);
-      movimiento = PARAR;
-
-      delay_ms(delay / 2);
-      movimiento = ATRAS;
-      delay_ms(delay2);
-      movimiento = PARAR;
-      delay_ms(delay / 2);
-
-      movimiento = DERECHA;
-      delay_ms(delay2);
-      movimiento = PARAR;
-      delay_ms(delay / 2);
-
-      movimiento = IZQUIERDA;
-      delay_ms(delay2);
-      movimiento = PARAR;
-
-      delay_ms(delay2);
-
-      if (delay > 100)
-         delay = delay - 100;
-      else
-         delay = delay / 2;
-}
+     // En cada case, leer sensores, determinar velocidad, movimiento
+     // y posiblemente cambiar a otro estado.
+     switch (estado_actual) {
+       case EST_EXPLORACION: {
+       
+       break;
+       }
+       default:
+         break;
+     }
+   }
 
 }
