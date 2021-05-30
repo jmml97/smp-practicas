@@ -1,4 +1,5 @@
 \documentclass[spanish]{beamer}
+\usepackage{babel}
 
 %%% CODIFICACIÓN
 
@@ -11,10 +12,10 @@
 
 %% Fuentes personalizadas para utilizar con XeTeX
 \usepackage[no-math]{fontspec}
-% \setromanfont{IBM Plex Sans}
-% \setmainfont{IBM Plex Sans}
-% \setsansfont{IBM Plex Sans}
-% \setmonofont[Scale=0.9]{IBM Plex Mono Medium}
+\setromanfont{IBM Plex Sans}
+\setmainfont{IBM Plex Sans}
+\setsansfont{IBM Plex Sans}
+\setmonofont[Scale=0.9]{IBM Plex Mono Medium}
 
 \usepackage[math-style=TeX,slash-delimiter=ascii]{unicode-math}
 %\setmathfont{XITS Math}
@@ -154,7 +155,7 @@
 \usepackage{adjustbox}
 %%% INFORMACIÓN DEL DOCUMENTO
 
-\title{Tupper}
+\title{Zigurat}
 \subtitle{Sistemas con Microprocesador}
 \author{Sofía Almeida Bruno\\ José María Martín Luque\\Daniel Pozo Escalona\\ \vspace{1em}}
 \begin{document}
@@ -162,7 +163,8 @@
 
 \maketitle
 
-\begin{frame}{Hardware empleado}
+\begin{frame}{Hardware empleado (1)}
+  Además de la plataforma básica:
   \begin{itemize}
     \item 2 bumpers.
     \item 1 sensor de ultrasonidos.
@@ -170,19 +172,41 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Hardware empleado}
-  \begin{center}
-    \begin{tikzpicture}
-      %\includegraphics{test}
-    \end{tikzpicture}
-  \end{center}
+\begin{frame}{Hardware empleado (2)}
+  \begin{figure}
+    \includegraphics[scale=0.07]{./img/zigurat1}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Hardware empleado (3)}
+  \begin{figure}
+    \includegraphics[scale=0.07]{./img/zigurat2}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Hardware empleado (4)}
+  \begin{figure}
+    \includegraphics[scale=0.07]{./img/zigurat3}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Hardware empleado (5)}
+  \begin{figure}
+    \includegraphics[scale=0.07]{./img/zigurat4}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Un Zigurat}
+  \begin{figure}
+    \includegraphics[scale=0.5]{./img/zigurat-mesopotamico}
+    \end{figure}
 \end{frame}
 
 \begin{frame}{Programa}
   \begin{itemize}
-    \item El el programa del robot funciona mediante estados.
-    \item Inicialmente el robot se encuentra en estado inicial y pasa al estado explorar. En función de la información que recibe de los distintos sensores, cambia de estado.
-    \item El orden de prioridad de los sensores es (de mayor a menor prioridad): sensor de línea negra trasero, sensores de línea negra delanteros, bumpers. 
+    \item El programa del robot funciona mediante estados.
+    \item Al principio el robot se encuentra en estado inicial y pasa al estado explorar. En función de la información que recibe de los distintos sensores, cambia de estado.
+    \item El orden de prioridad de los sensores es (de mayor a menor prioridad): bumpers, sensor de línea negra trasero, sensores de línea negra delanteros. 
   \end{itemize}
 \end{frame}
 
@@ -201,16 +225,25 @@
 \end{frame}
 
 \begin{frame}[fragile]{Diagrama de estados}
-  \begin{tikzpicture}[node distance=2.8cm]
-    \node[state, initial] (q1) {$q_1$};
-    \node[state, accepting, right of=q1] (q2) {$q_2$};
-    \node[state, right of=q2] (q3) {$q_3$};
-    \draw (q1) edge[loop above] node{0} (q1)
-    (q1) edge[above] node{1} (q2)
-    (q2) edge[loop above] node{1} (q2)
-    (q2) edge[bend left, above] node{0} (q3)
-    (q3) edge[bend left, below] node{0, 1} (q2);
-    \end{tikzpicture}
+  \begin{tikzpicture}[node distance=4cm]
+    \small 
+    \node[state, initial] (q1) {INICIAL};
+    \node[state, right of=q1] (q2) {EXPLORAR};
+    \node[state, right of=q2] (q3) {HUIR};
+    \node[state, below of=q1] (q4) {EVITAR\_LD};
+    \node[state, right of=q4] (q5) {LAPA};
+    \path[->]
+    (q1) edge [above] node{} (q2)
+    (q2) edge [sloped, bend left, align=center, below] node{Bumper} (q5)
+    (q5) edge [sloped, align=center] node{} (q2)
+    (q2) edge [sloped, anchor=center, bend right, below] node{SRF02} (q5)
+    (q5) edge [sloped, bend right, below] node{CNY Trasero} (q3)
+    (q2) edge [sloped, below] node{CNY Delantero} (q4)
+    (q4) edge [bend left, sloped, above] node{} (q2)
+    (q2) edge [bend left, above] node{CNY Trasero} (q3)
+    (q3) edge [bend left, below] node{} (q2)
+    (q2) edge [loop above] node{} (q2);
+  \end{tikzpicture}
 \end{frame}
 
 \end{document}
