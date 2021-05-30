@@ -61,6 +61,7 @@ dkms.conf
 *.sym
 *.tre
 *.xsym
+__history
 
 # Movidas de macOS
 .DS_Store
